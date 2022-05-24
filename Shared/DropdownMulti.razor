@@ -1,0 +1,159 @@
+﻿
+<div style="margin:10px;">
+    <details style="border: 1px solid; border-radius:1rem; padding: 5px 5px 5px 10px;">
+
+        <summary style="">
+            <span style="font-weight:bold;">@Title @count</span>
+        </summary>
+        <fieldset>
+            <legend title="selected-stuff"></legend>
+            <ul style="padding: 0px; padding-left: 5px; margin-bottom: 0px;">
+                <li style="list-style-type: none;  border-bottom:1px solid; margin-bottom:5px;">
+                    @{ var itemId = "selectall-checkbox-" + Guid.NewGuid().ToString(); }
+                    @*<label style="margin:0px;">Filter</label>
+                <input type="search" style="width:100%;" />*@
+
+                    <input type="checkbox" id="@itemId" name="" checked="@selectAll" @onchange="CheckAll" style="padding-right:3px;" />
+                    <label for="@itemId" style="margin:0px;">All</label><br>
+                </li>
+                @foreach (var item in Items)
+                {
+                    itemId = item.Name + "-checkbox-" + Guid.NewGuid().ToString();
+                    <li style="list-style-type: none; padding-left: 10px; align-items: center;">
+                        <input type="checkbox" id="@itemId" name="@item.Name" checked="@item.IsSelected" @onchange="@(e => CheckboxChanged(e, item.Id))" />
+                        <label for="@itemId" style="margin:0px;"> @item.Name</label><br>
+
+
+                    </li>
+                }
+            </ul>
+        </fieldset>
+    </details>
+</div>
+
+
+@*@foreach (var a in stringList)
+    {
+        <div>@a</div>
+    }*@
+
+
+@code{
+
+    [Parameter]
+    public string Title { get; set; }
+    public List<ExtendedCategory> Items { get; set; }
+    //public List<ExtendedCategory> SelectedItems { get; set; }
+    public List<string> stringList { get; set; }
+
+    private bool selectAll { get; set; }
+    private int count { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        Items = new List<ExtendedCategory>();
+        Items.Add(new ExtendedCategory() { Id = "1", Name = "First" });
+        Items.Add(new ExtendedCategory() { Id = "2", Name = "Second" });
+        Items.Add(new ExtendedCategory() { Id = "3", Name = "Third" });
+        Items.Add(new ExtendedCategory() { Id = "4", Name = "Fourth" });
+        Items.Add(new ExtendedCategory() { Id = "5", Name = "Fifth" });
+
+        stringList = new List<string>();
+        stringList.Add("1");
+        stringList.Add("2");
+
+
+        foreach (var item in Items)
+        {
+            foreach (var sel in stringList)
+            {
+                if (sel == item.Id)
+                {
+                    item.IsSelected = true;
+                    count++;
+                }
+            }
+        }
+
+        return base.OnInitializedAsync();
+    }
+
+
+    private void CheckAll(ChangeEventArgs e)
+    {
+        selectAll = !selectAll;
+        count = 0;
+        foreach (var item in Items)
+        {
+            if (selectAll)
+            {
+                count++;
+                if (!item.IsSelected)
+                {
+                    item.IsSelected = true;
+                    stringList.Add(item.Id);
+                }
+            }
+            else
+            {
+                if (item.IsSelected)
+                {
+                    item.IsSelected = false;
+                    stringList.Remove(item.Id);
+
+                }
+            }
+        }
+    }
+
+    private void CheckboxChanged(/*string id*/ ChangeEventArgs e, string id)
+    {
+        // get the checkbox state
+
+        foreach (var item in Items)
+        {
+            if (item.Id == id)
+            {
+                item.IsSelected = !item.IsSelected;
+                if (item.IsSelected)
+                {
+                    stringList.Add(item.Id);
+                    count++;
+                }
+                else
+                {
+                    stringList.Remove(item.Id);
+                    count--;
+                    if (selectAll)
+                        selectAll = false;
+
+                }
+                break;
+            }
+        }
+        //var value = e.Value
+        //Console.WriteLine($"Checkbox changed {IsChecked}");
+
+        // var item = Items.Where(a => a.Id == categoryItem.Id);
+        //if (categoryItem.IsSelected)
+        //{
+        //    stringList.Add(categoryItem.Id);
+        //}
+        //else
+        //{
+        //    stringList.Remove(categoryItem.Id);
+
+        //}
+    }
+
+    public class Category
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+    }
+    public class ExtendedCategory : Category
+    {
+        public bool IsSelected { get; set; }
+    }
+
+}

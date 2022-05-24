@@ -1,0 +1,25 @@
+﻿@page "/counter"
+
+<input type="checkbox" checked="@isChecked" @oninput="CheckboxChanged">
+
+@code{
+    [Parameter]
+    public bool IsChecked { get; set; } = true;
+
+    // Internal field holding checkbox state
+    private bool isChecked;
+
+    // updates the internal value whwenever the component is updated
+    protected override void OnParametersSet()
+    {
+        isChecked = this.IsChecked;
+    }
+
+    private void CheckboxChanged(ChangeEventArgs e)
+    {
+        // get the checkbox state
+        isChecked = !isChecked;
+        var value = e.Value;
+        Console.WriteLine($"Checkbox changed {IsChecked}");
+    }
+}

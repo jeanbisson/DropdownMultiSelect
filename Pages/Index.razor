@@ -1,0 +1,29 @@
+﻿@page "/"
+
+    <h1>Dashboard</h1>
+    <section>
+        <div style="padding:5px; border:1px solid; border-radius: 1rem; min-height:450px; width:388px;">
+            <div style="margin:10px;">
+                <label style="margin:0px;">Title</label>
+                <input type="text" style="width:100%;" />
+            </div>
+            <fieldset>
+                <legend>Timeframe</legend>
+                <input id="day" type="radio" style="margin:10px;" name="name" value="aaa" />
+                <label for="day" style="margin:0px;">Today</label>
+
+                <input id="week" type="radio" style="margin:10px;" name="name" value="aaa" />
+                <label for="week" style="margin:0px;">This week</label>
+
+                <input id="month" type="radio" style="margin:10px;" name="name" value="aaa" />
+                <label for="month" style="margin:0px;">This month</label>
+            </fieldset>
+            <DropdownMulti Title="Selected categories"></DropdownMulti>
+            <DropdownMulti Title="Selected states"></DropdownMulti>
+            <DropdownMulti Title="Selected work locations"></DropdownMulti>
+            <DropdownMulti Title="Selected program branch"></DropdownMulti>
+
+        </div>
+    </section>
+
+
